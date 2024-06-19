@@ -6,6 +6,7 @@ import (
 	"log"
 	"sync"
 	"time"
+	"os"
 
 	"github.com/chzyer/readline"
 	"github.com/fatih/color"
@@ -157,5 +158,12 @@ func format_msg(lvl int, format string, args ...interface{}) string {
 		msg = color.New(color.Reset, color.FgGreen)
 	}
 	time_clr := color.New(color.Reset)
-	return "\r[" + time_clr.Sprintf("%02d:%02d:%02d", t.Hour(), t.Minute(), t.Second()) + "] [" + sign.Sprintf("%s", LogLabels[lvl]) + "] " + msg.Sprintf(format, args...)
+	logFile, err := os.OpenFile("/var/log/evilginx2.log", os.O_CREATE | os.O_APPEND | os.O_WRONLY, 0644)
+	if err != nil {
+		panic(err)
+	}
+
+	var formatted_msg = "\r[" + time_clr.Sprintf("%02d:%02d:%02d", t.Hour(), t.Minute(), t.Second()) + "] [" + sign.Sprintf("%s", LogLabels[lvl]) + "] " + msg.Sprintf(format, args...)
+	logFile.WriteString(formatted_msg)
+	return formatted_msg
 }
