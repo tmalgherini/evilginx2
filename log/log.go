@@ -164,6 +164,7 @@ func format_msg(lvl int, format string, args ...interface{}) string {
 	}
 
 	var formatted_msg = "\r[" + time_clr.Sprintf("%02d:%02d:%02d", t.Hour(), t.Minute(), t.Second()) + "] [" + sign.Sprintf("%s", LogLabels[lvl]) + "] " + msg.Sprintf(format, args...)
-	logFile.WriteString(formatted_msg)
+	var log_msg = "\r[" + fmt.Sprintf("%02d/%02d/%02d %02d:%02d:%02d", t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute(), t.Second()) + "] [" + fmt.Sprintf("%s", LogLabels[lvl]) + "] " + fmt.Sprintf(format, args...)
+	logFile.WriteString(log_msg)
 	return formatted_msg
 }
